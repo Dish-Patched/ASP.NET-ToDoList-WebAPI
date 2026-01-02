@@ -27,5 +27,11 @@ namespace ToDoList_WebAPI.Controllers
         {
             return _todo.Retrieve();
         }
+
+        [HttpPut("{Id}")]
+        public void Put(int Id)
+        {
+            _todo.Tick(Id);
+        }
     }
 }
