@@ -3,31 +3,36 @@
     public class TodoService
     {
         int nextID = 0;
-        private readonly List<TodoList> _todoList = new();
+        private readonly TodoDBContext _context;
+
+        public TodoService(TodoDBContext context)
+        {
+            _context = context;
+        }
 
         public TodoList AddTodo(JsonMessage title)
         {
             var todo = new TodoList(title.message, nextID);
             nextID++;
-            _todoList.Add(todo);
+            _context.TodoDb.Add(todo);
+            _context.SaveChanges();
             return todo;
         }
 
         public List<TodoList> Retrieve()
         {
-            return _todoList;
+            return _context.TodoDb.ToList();
         }
 
         public int Tick(int Id)
         {
-            for (int i = 0; i < _todoList.Count; i++)
+            var task = _context.TodoDb.Find(Id);
+
+            if (task != null)
             {
-                if (_todoList[i].ID == Id)
-                {
-                    _todoList[i].Done();
-                    Console.WriteLine($"{_todoList[i].Title} is done!");
-                    return 0;
-                }
+                task.Done();
+                _context.SaveChanges();
+                return 0;
             }
 
             Console.WriteLine("Task does not exist");
@@ -36,7 +41,8 @@
 
         public void Clear()
         {
-            _todoList.Clear();
+            _context.TodoDb.RemoveRange(_context.TodoDb);
+            _context.SaveChanges();
         }
 
     }
