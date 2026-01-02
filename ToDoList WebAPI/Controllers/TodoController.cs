@@ -33,5 +33,12 @@ namespace ToDoList_WebAPI.Controllers
         {
             _todo.Tick(Id);
         }
+
+        [HttpDelete("Clear")]
+        public void Delete()
+        {
+            _todo.Clear();
+            Console.WriteLine("Cleared List");
+        }
     }
 }

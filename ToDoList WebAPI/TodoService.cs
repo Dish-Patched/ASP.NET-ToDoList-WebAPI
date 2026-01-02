@@ -34,5 +34,10 @@
             return 0;
         }
 
+        public void Clear()
+        {
+            _todoList.Clear();
+        }
+
     }
 }
