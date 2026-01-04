@@ -16,28 +16,28 @@ namespace ToDoList_WebAPI.Controllers
         }
 
         [HttpPost]
-        public TodoList Post(JsonMessage msg)
+        async public Task<TodoList> Post(JsonMessage msg)
         {
-            TodoList Todo = _todo.AddTodo(msg);
+            TodoList Todo = await _todo.AddTodo(msg);
             return Todo;
         }
 
         [HttpGet]
-        public List<TodoList> Get()
+        async public Task<List<TodoList>> Get()
         {
-            return _todo.Retrieve();
+            return await _todo.Retrieve();
         }
 
         [HttpPut("{Id}")]
-        public void Put(int Id)
+        async public Task Put(int Id)
         {
-            _todo.Tick(Id);
+            await _todo.Tick(Id);
         }
 
         [HttpDelete("Clear")]
-        public void Delete()
+        async public Task Delete()
         {
-            _todo.Clear();
+            await _todo.Clear();
             Console.WriteLine("Cleared List");
         }
     }

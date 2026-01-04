@@ -1,4 +1,6 @@
-﻿namespace ToDoList_WebAPI
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ToDoList_WebAPI
 {
     public class TodoService
     {
@@ -10,28 +12,28 @@
             _context = context;
         }
 
-        public TodoList AddTodo(JsonMessage title)
+        async public Task<TodoList> AddTodo(JsonMessage title)
         {
             var todo = new TodoList(title.message, nextID);
             nextID++;
             _context.TodoDb.Add(todo);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return todo;
         }
 
-        public List<TodoList> Retrieve()
+        async public Task<List<TodoList>> Retrieve()
         {
-            return _context.TodoDb.ToList();
+            return await _context.TodoDb.ToListAsync();
         }
 
-        public int Tick(int Id)
+        async public Task<int> Tick(int Id)
         {
-            var task = _context.TodoDb.Find(Id);
+            var task = await _context.TodoDb.FindAsync(Id);
 
             if (task != null)
             {
                 task.Done();
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return 0;
             }
 
@@ -39,10 +41,10 @@
             return 0;
         }
 
-        public void Clear()
+        async public Task Clear()
         {
             _context.TodoDb.RemoveRange(_context.TodoDb);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
     }
